@@ -1,0 +1,9 @@
+version: "3.3"
+
+services:
+  alpine-build-env:
+    #image: "alpine-build-env:latest"
+    build: .
+    command: /bin/ash
+    volumes:
+      - ${HOME:-~}:/home/builder
