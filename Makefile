@@ -13,7 +13,7 @@ binfmt_misc_arm32v7: qemu-static
 	$(info Register binfmt if needed)
 	@if [ ! -f /proc/sys/fs/binfmt_misc/arm32v7 ]; then \
 		sudo mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc 2> /dev/null; \
-		sudo su -c "echo ':arm32v7:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/local/bin/qemu-arm-static' > /proc/sys/fs/binfmt_misc/register"; \
+		sudo su -c "echo ':arm32v7:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/local/bin/qemu-arm-static:OC' > /proc/sys/fs/binfmt_misc/register"; \
 	fi
 
 .PHONY: amd64
