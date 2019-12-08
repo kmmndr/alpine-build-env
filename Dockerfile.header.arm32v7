@@ -1,0 +1,3 @@
+FROM arm32v7/alpine:edge
+
+COPY --from=qemu-static /usr/local/bin/qemu-arm-static /usr/local/bin/qemu-arm-static
