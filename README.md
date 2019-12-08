@@ -6,12 +6,12 @@ project is a quick way to enter into AlpineLinux's world :-)
 
 # Prerequisite
 
-The only requirement is `docker`, `make` and `sudo` on your workstation, but
-you probably have it installed already.
+The only requirement is `docker`, `make`, `git`, and `sudo` on your
+workstation, but you probably have it installed already.
 
 # Usage
 
-The main make rules are `amd64` and `arm32v7` to enter arch specific
+The main make targets are `amd64` and `arm32v7` to enter arch specific
 environments.
 
 ```shell
