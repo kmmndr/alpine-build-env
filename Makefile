@@ -1,5 +1,14 @@
 docker_run_env = docker run --rm -it --privileged -v ${HOME}:/home/builder -v /var/run/docker.sock:/var/run/docker.sock:ro
 
+all: help
+.PHONY: help
+help:
+	$(info Usage:)
+	$(info - make amd64, to enter native (amd64) environment)
+	$(info - make arm32v7, to enter arm environment)
+	$(info - make clean, to clean installed stuff)
+	@echo
+
 .PHONY: qemu-static
 qemu-static:
 	$(info Building qemu-static)
