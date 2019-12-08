@@ -1,3 +1,5 @@
+ALPINE_RELEASE ?= edge
+
 docker_run_env = docker run --rm -it --privileged -v ${HOME}:/home/builder
 
 all: help
@@ -26,7 +28,7 @@ binfmt_misc_arm32v7: qemu-static
 	fi
 
 Dockerfile.amd64: Dockerfile.header.amd64 Dockerfile.base
-	cat Dockerfile.header.amd64 Dockerfile.base > Dockerfile.amd64
+	sed -e "s/\$${ALPINE_RELEASE}/$(ALPINE_RELEASE)/" Dockerfile.header.amd64 Dockerfile.base > Dockerfile.amd64
 
 .PHONY: amd64
 amd64: Dockerfile.amd64
@@ -34,7 +36,7 @@ amd64: Dockerfile.amd64
 	$(docker_run_env) alpine-build-env-amd64
 
 Dockerfile.arm32v7: Dockerfile.header.arm32v7 Dockerfile.base
-	cat Dockerfile.header.arm32v7 Dockerfile.base > Dockerfile.arm32v7
+	sed -e "s/\$${ALPINE_RELEASE}/$(ALPINE_RELEASE)/" Dockerfile.header.arm32v7 Dockerfile.base > Dockerfile.arm32v7
 
 .PHONY: arm32v7
 arm32v7: Dockerfile.arm32v7 binfmt_misc_arm32v7
