@@ -21,6 +21,3 @@ make amd64
 ```shell
 make arm32v7
 ```
-
-Then, into your alpine's environment you can use the script
-`init-alpine-build-env` to initialize required stuff.

@@ -1,4 +1,4 @@
-docker_run_env = docker run --rm -it --privileged -v ${HOME}:/home/builder -v /var/run/docker.sock:/var/run/docker.sock:ro
+docker_run_env = docker run --rm -it --privileged -v ${HOME}:/home/builder
 
 all: help
 .PHONY: help
@@ -28,12 +28,12 @@ binfmt_misc_arm32v7: qemu-static
 .PHONY: amd64
 amd64: Dockerfile.amd64
 	docker build --tag alpine-build-env-amd64 -f Dockerfile.amd64 .
-	$(docker_run_env) alpine-build-env-amd64 /bin/ash
+	$(docker_run_env) alpine-build-env-amd64
 
 .PHONY: arm32v7
 arm32v7: Dockerfile.arm32v7 binfmt_misc_arm32v7
 	docker build --tag alpine-build-env-arm32v7 -f Dockerfile.arm32v7 .
-	$(docker_run_env) alpine-build-env-arm32v7 /bin/ash
+	$(docker_run_env) alpine-build-env-arm32v7
 
 .PHONY: binfmt_misc_unregister_arm32v7
 binfmt_misc_unregister_arm32v7:
