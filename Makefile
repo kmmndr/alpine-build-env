@@ -28,7 +28,10 @@ binfmt_misc_arm32v7: qemu-static
 	fi
 
 Dockerfile.amd64: Dockerfile.header.amd64 Dockerfile.base
-	sed -e "s/\$${ALPINE_RELEASE}/$(ALPINE_RELEASE)/" Dockerfile.header.amd64 Dockerfile.base > Dockerfile.amd64
+	@sed -e "s/\$${ALPINE_RELEASE}/$(ALPINE_RELEASE)/" Dockerfile.header.amd64 Dockerfile.base > Dockerfile.amd64
+	@if [ -f Dockerfile.custom ]; then \
+		cat Dockerfile.custom >> Dockerfile.amd64; \
+	fi
 
 .PHONY: amd64
 amd64: Dockerfile.amd64
@@ -36,7 +39,10 @@ amd64: Dockerfile.amd64
 	$(docker_run_env) alpine-build-env-amd64
 
 Dockerfile.arm32v7: Dockerfile.header.arm32v7 Dockerfile.base
-	sed -e "s/\$${ALPINE_RELEASE}/$(ALPINE_RELEASE)/" Dockerfile.header.arm32v7 Dockerfile.base > Dockerfile.arm32v7
+	@sed -e "s/\$${ALPINE_RELEASE}/$(ALPINE_RELEASE)/" Dockerfile.header.arm32v7 Dockerfile.base > Dockerfile.arm32v7
+	@if [ -f Dockerfile.custom ]; then \
+		cat Dockerfile.custom >> Dockerfile.arm32v7; \
+	fi
 
 .PHONY: arm32v7
 arm32v7: Dockerfile.arm32v7 binfmt_misc_arm32v7
@@ -53,7 +59,7 @@ binfmt_misc_unregister_arm32v7:
 .PHONY: rm-qemu-static
 rm-qemu-static:
 	$(info Removing docker image)
-	@-docker rm qemu-static
+	@-docker rm qemu-static 2>/dev/null || true
 
 .PHONY: clean
 clean: binfmt_misc_unregister_arm32v7 rm-qemu-static
