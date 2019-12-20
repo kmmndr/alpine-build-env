@@ -2,6 +2,7 @@
 
 name=$(git config --global --get user.name)
 email=$(git config --global --get user.email)
+shell=${SHELL:-/bin/ash}
 
 ABUILD_PATH="$HOME/.abuild"
 ABUILD_CONFIG="$ABUILD_PATH/abuild.conf"
@@ -23,4 +24,4 @@ fi
 mkdir -p "$HOME/packages"
 
 echo "Welcome to AlpineLinux"
-/bin/ash
+$shell
