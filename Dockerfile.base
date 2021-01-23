@@ -2,6 +2,7 @@ RUN apk add --no-cache \
   alpine-sdk \
   coreutils \
   cmake \
+  sudo \
   vim
 
 RUN adduser -G abuild -g "Alpine Package Builder" -s /bin/ash -D builder \
