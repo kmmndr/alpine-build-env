@@ -6,7 +6,7 @@ all: help
 .PHONY: help
 help:
 	$(info Usage:)
-	$(info - make amd64, to enter native (amd64) environment)
+	$(info - make native, to enter native (amd64) environment)
 	$(info - make arm32v7, to enter arm environment)
 	$(info - make clean, to clean installed stuff)
 	@echo
@@ -27,16 +27,16 @@ binfmt_misc_arm32v7: qemu-static
 		sudo su -c "echo ':arm32v7:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/local/bin/qemu-arm-static:OC' > /proc/sys/fs/binfmt_misc/register"; \
 	fi
 
-Dockerfile.amd64: Dockerfile.header.amd64 Dockerfile.base
-	@sed -e "s/\$${ALPINE_RELEASE}/$(ALPINE_RELEASE)/" Dockerfile.header.amd64 Dockerfile.base > Dockerfile.amd64
+Dockerfile.native: Dockerfile.header.native Dockerfile.base
+	@sed -e "s/\$${ALPINE_RELEASE}/$(ALPINE_RELEASE)/" Dockerfile.header.native Dockerfile.base > Dockerfile.native
 	@if [ -f Dockerfile.custom ]; then \
-		cat Dockerfile.custom >> Dockerfile.amd64; \
+		cat Dockerfile.custom >> Dockerfile.native; \
 	fi
 
-.PHONY: amd64
-amd64: Dockerfile.amd64
-	docker build --tag alpine-build-env-amd64 -f Dockerfile.amd64 .
-	$(docker_run_env) alpine-build-env-amd64
+.PHONY: native
+native: Dockerfile.native
+	docker build --tag alpine-build-env-native -f Dockerfile.native .
+	$(docker_run_env) alpine-build-env-native
 
 Dockerfile.arm32v7: Dockerfile.header.arm32v7 Dockerfile.base
 	@sed -e "s/\$${ALPINE_RELEASE}/$(ALPINE_RELEASE)/" Dockerfile.header.arm32v7 Dockerfile.base > Dockerfile.arm32v7
@@ -63,5 +63,5 @@ rm-qemu-static:
 
 .PHONY: clean
 clean: binfmt_misc_unregister_arm32v7 rm-qemu-static
-	@rm -f Dockerfile.amd64
+	@rm -f Dockerfile.native
 	@rm -f Dockerfile.arm32v7
