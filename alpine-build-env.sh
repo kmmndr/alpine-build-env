@@ -27,6 +27,7 @@ if [ ! -d "$ABUILD_PATH" ]; then
   abuild-keygen -a -i
 else
   echo "Abuild configuration found"
+  sudo cp ~/.abuild/*.pub /etc/apk/keys/
 fi
 
 # TODO: remove these lines ... it'd better be in the Dockerfile
