@@ -1,3 +1,6 @@
+ARG USER_ID=1000
+ENV USER_ID=$USER_ID
+
 RUN apk add --no-cache \
   alpine-sdk \
   coreutils \
@@ -5,7 +8,7 @@ RUN apk add --no-cache \
   sudo \
   vim
 
-RUN adduser -G abuild -g "Alpine Package Builder" -s /bin/ash -D builder \
+RUN adduser -G abuild -u $USER_ID -g "Alpine Package Builder" -s /bin/ash -D builder \
  && echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 COPY alpine-build-env.sh /usr/local/bin/alpine-build-env

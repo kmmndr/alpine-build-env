@@ -1,4 +1,5 @@
 ALPINE_RELEASE ?= edge
+export USER_ID=$(shell id -u)
 
 docker_run_env = docker run --rm -it --privileged -v ${HOME}:/home/builder
 
@@ -27,6 +28,7 @@ binfmt_misc_arm32v7: qemu-static
 		sudo su -c "echo ':arm32v7:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/local/bin/qemu-arm-static:OC' > /proc/sys/fs/binfmt_misc/register"; \
 	fi
 
+.INTERMEDIATE: Dockerfile.native
 Dockerfile.native: Dockerfile.header.native Dockerfile.base
 	@sed -e "s/\$${ALPINE_RELEASE}/$(ALPINE_RELEASE)/" Dockerfile.header.native Dockerfile.base > Dockerfile.native
 	@if [ -f Dockerfile.custom ]; then \
@@ -35,9 +37,10 @@ Dockerfile.native: Dockerfile.header.native Dockerfile.base
 
 .PHONY: native
 native: Dockerfile.native
-	docker build --tag alpine-build-env-native -f Dockerfile.native .
+	docker build --build-arg USER_ID=${USER_ID} --tag alpine-build-env-native -f Dockerfile.native .
 	$(docker_run_env) alpine-build-env-native
 
+.INTERMEDIATE: Dockerfile.arm32v7
 Dockerfile.arm32v7: Dockerfile.header.arm32v7 Dockerfile.base
 	@sed -e "s/\$${ALPINE_RELEASE}/$(ALPINE_RELEASE)/" Dockerfile.header.arm32v7 Dockerfile.base > Dockerfile.arm32v7
 	@if [ -f Dockerfile.custom ]; then \
@@ -46,7 +49,7 @@ Dockerfile.arm32v7: Dockerfile.header.arm32v7 Dockerfile.base
 
 .PHONY: arm32v7
 arm32v7: Dockerfile.arm32v7 binfmt_misc_arm32v7
-	docker build --tag alpine-build-env-arm32v7 -f Dockerfile.arm32v7 .
+	docker build --build-arg USER_ID=${USER_ID} --tag alpine-build-env-arm32v7 -f Dockerfile.arm32v7 .
 	$(docker_run_env) alpine-build-env-arm32v7
 
 .PHONY: binfmt_misc_unregister_arm32v7
