@@ -1,7 +1,5 @@
 #!/bin/ash
 
-name=$(git config --global --get user.name)
-email=$(git config --global --get user.email)
 shell=${SHELL:-/bin/ash}
 
 ABUILD_PATH="$HOME/.abuild"
@@ -9,6 +7,18 @@ ABUILD_CONFIG="$ABUILD_PATH/abuild.conf"
 
 if [ ! -d "$ABUILD_PATH" ]; then
   echo "Abuild configuration not found, creating new ..."
+
+  name=$(git config --global --get user.name)
+  if [ -n $name ]; then
+    echo -n "Please enter your name: "
+    read name
+  fi
+
+  email=$(git config --global --get user.email)
+  if [ -n $email ]; then
+    echo -n "Please enter your email: "
+    read email
+  fi
 
   mkdir "$ABUILD_PATH"
   sudo mv /etc/abuild.conf "$ABUILD_CONFIG"
